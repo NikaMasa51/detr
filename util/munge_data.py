@@ -37,7 +37,7 @@ def process_data(coco, data_type="train"):
     print(coco.info)
     # get all ImgIds and images
     imgIds = coco.getImgIds()
-    images = coco.loadImgs(imgIds_train)
+    images = coco.loadImgs(imgIds)
     
     for im in tqdm(images, total=len(images)):
 
