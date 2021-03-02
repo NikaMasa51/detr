@@ -10,7 +10,7 @@ from tqdm import tqdm
 from sklearn import model_selection
 
 
-def from_json(label_data, type='train', im_output):
+def from_json(label_data, im_output, type='train'):
     # # read labelbox JSON output
     # with open(labeled_data, 'r', encoding='utf-8') as f:
     #     # lines = f.readlines()
