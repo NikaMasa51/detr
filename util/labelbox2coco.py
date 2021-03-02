@@ -15,7 +15,7 @@ def from_json(label_data, im_output, type='train'):
     # with open(labeled_data, 'r', encoding='utf-8') as f:
     #     # lines = f.readlines()
     #     label_data = json.load(f)
-    coco_output = './data/annotations/instances_{type}2017.json'
+    coco_output = f'./data/annotations/instances_{type}2017.json'
 
     # setup COCO dataset container and info
     coco = {
