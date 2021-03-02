@@ -26,13 +26,19 @@ os.makedirs(OUTPUT_PATH, exist_ok=True)
 # os.makedirs(os.path.join(OUTPUT_PATH, 'images'), exist_ok=True)
 # os.makedirs(os.path.join(OUTPUT_PATH, 'labels'), exist_ok=True)
 
-def process_data(images, data_type="train"):
+def process_data(coco, data_type="train"):
     # os.makedirs(os.path.join(SEG_PATH_FULL, f'images/{data_type}/'), exist_ok=True)
     # os.makedirs(os.path.join(SEG_PATH_FULL, f'masks/{data_type}/'), exist_ok=True)
     # os.makedirs(os.path.join(SEG_PATH_SUB, f'images/{data_type}/'), exist_ok=True)
     # os.makedirs(os.path.join(SEG_PATH_SUB, f'masks/{data_type}/'), exist_ok=True)
     os.makedirs(os.path.join(OUTPUT_PATH, f'{data_type}2017/'), exist_ok=True)
     # os.makedirs(os.path.join(OUTPUT_PATH, f'labels/{data_type}/'), exist_ok=True)
+    
+    print(coco.info)
+    # get all ImgIds and images
+    imgIds = coco.getImgIds()
+    images = coco.loadImgs(imgIds_train)
+    
     for im in tqdm(images, total=len(images)):
 
         img = imageio.imread(im['coco_url'])
@@ -131,16 +137,8 @@ def process_data(images, data_type="train"):
 if __name__ == "__main__":
     # make train data
     coco_train = COCO(JSON_PATH_TRAIN)
-    print(coco_train.info)
-    # get all ImgIds and images
-    imgIds_train = coco_train.getImgIds()
-    train = coco_train.loadImgs(imgIds_train)
-    process_data(train, data_type="train")
+    process_data(coco_train, data_type="train")
 
     # make validation data
     coco_val = COCO(JSON_PATH_VAL)
-    print(coco_val.info)
-    # get all ImgIds and images
-    imgIds_val = coco_val.getImgIds()
-    valid = coco_val.loadImgs(imgIds_val)
-    process_data(valid, data_type="val")
+    process_data(coco_val, data_type="val")
