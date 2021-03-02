@@ -7,9 +7,10 @@ from shapely.geometry import Polygon
 import requests
 from PIL import Image
 from tqdm import tqdm
+from sklearn import model_selection
 
 
-def from_json(labeled_data, type='train', im_output):
+def from_json(label_data, type='train', im_output):
     # # read labelbox JSON output
     # with open(labeled_data, 'r', encoding='utf-8') as f:
     #     # lines = f.readlines()
@@ -116,18 +117,18 @@ def from_json(labeled_data, type='train', im_output):
 if __name__ == "__main__":
     json_file = './data/annotations/labelbox_final.json'
     # read labelbox JSON output
-    with open(labeled_data, 'r', encoding='utf-8') as f:
+    with open(json_file, 'r', encoding='utf-8') as f:
         # lines = f.readlines()
-        label_data = json.load(f)
+        labeled_data = json.load(f)
     
     # train, validation split
     train, valid = model_selection.train_test_split(
-        label_data,
+        labeled_data,
         test_size=0.1,
         random_state=42,
         shuffle=True        
     )
 
     im_output = './data/train'
-    from_json(train, type='train', im_output)
-    from_json(valid, type='val', im_output)
+    from_json(train, im_output, type='train')
+    from_json(valid, im_output, type='val')
