@@ -9,11 +9,12 @@ from PIL import Image
 from tqdm import tqdm
 
 
-def from_json(labeled_data, coco_output, im_output):
-    # read labelbox JSON output
-    with open(labeled_data, 'r', encoding='utf-8') as f:
-        # lines = f.readlines()
-        label_data = json.load(f)
+def from_json(labeled_data, type='train', im_output):
+    # # read labelbox JSON output
+    # with open(labeled_data, 'r', encoding='utf-8') as f:
+    #     # lines = f.readlines()
+    #     label_data = json.load(f)
+    coco_output = './data/annotations/instances_{type}2017.json'
 
     # setup COCO dataset container and info
     coco = {
@@ -113,7 +114,20 @@ def from_json(labeled_data, coco_output, im_output):
         f.write(json.dumps(coco))
 
 if __name__ == "__main__":
-    json_file = './data/annotation/labelbox_final.json'
+    json_file = './data/annotations/labelbox_final.json'
+    # read labelbox JSON output
+    with open(labeled_data, 'r', encoding='utf-8') as f:
+        # lines = f.readlines()
+        label_data = json.load(f)
+    
+    # train, validation split
+    train, valid = model_selection.train_test_split(
+        label_data,
+        test_size=0.1,
+        random_state=42,
+        shuffle=True        
+    )
+
     im_output = './data/train'
-    coco_output = './data/annotation/coco_final.json'
-    from_json(json_file, coco_output, im_output)
+    from_json(train, type='train', im_output)
+    from_json(valid, type='val', im_output)

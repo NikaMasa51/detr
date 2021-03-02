@@ -9,28 +9,30 @@ from pycocotools.coco import COCO
 from tqdm import tqdm
 
 
-JSON_PATH = './data/annotation/coco_final.json'
-OUTPUT_PATH = './data/object_data'
-SEG_PATH_FULL = './data/segmentation_full'
-SEG_PATH_SUB = './data/segmentation_sub'
+JSON_PATH_TRAIN = './data/annotations/instances_train2017.json'
+JSON_PATH_VAL = './data/annotations/instances_val2017.json'
 
-os.makedirs(SEG_PATH_FULL, exist_ok=True)
-os.makedirs(SEG_PATH_SUB, exist_ok=True)
+OUTPUT_PATH = './data'
+# SEG_PATH_FULL = './data/segmentation_full'
+# SEG_PATH_SUB = './data/segmentation_sub'
+
+# os.makedirs(SEG_PATH_FULL, exist_ok=True)
+# os.makedirs(SEG_PATH_SUB, exist_ok=True)
 os.makedirs(OUTPUT_PATH, exist_ok=True)
-os.makedirs(os.path.join(SEG_PATH_FULL, 'images'), exist_ok=True)
-os.makedirs(os.path.join(SEG_PATH_FULL, 'masks'), exist_ok=True)
+# os.makedirs(os.path.join(SEG_PATH_FULL, 'images'), exist_ok=True)
+# os.makedirs(os.path.join(SEG_PATH_FULL, 'masks'), exist_ok=True)
 # os.makedirs(os.path.join(SEG_PATH_SUB, 'images'), exist_ok=True)
 # os.makedirs(os.path.join(SEG_PATH_SUB, 'masks'), exist_ok=True)
-os.makedirs(os.path.join(OUTPUT_PATH, 'images'), exist_ok=True)
-os.makedirs(os.path.join(OUTPUT_PATH, 'labels'), exist_ok=True)
+# os.makedirs(os.path.join(OUTPUT_PATH, 'images'), exist_ok=True)
+# os.makedirs(os.path.join(OUTPUT_PATH, 'labels'), exist_ok=True)
 
 def process_data(images, data_type="train"):
-    os.makedirs(os.path.join(SEG_PATH_FULL, f'images/{data_type}/'), exist_ok=True)
-    os.makedirs(os.path.join(SEG_PATH_FULL, f'masks/{data_type}/'), exist_ok=True)
+    # os.makedirs(os.path.join(SEG_PATH_FULL, f'images/{data_type}/'), exist_ok=True)
+    # os.makedirs(os.path.join(SEG_PATH_FULL, f'masks/{data_type}/'), exist_ok=True)
     # os.makedirs(os.path.join(SEG_PATH_SUB, f'images/{data_type}/'), exist_ok=True)
     # os.makedirs(os.path.join(SEG_PATH_SUB, f'masks/{data_type}/'), exist_ok=True)
-    os.makedirs(os.path.join(OUTPUT_PATH, f'images/{data_type}/'), exist_ok=True)
-    os.makedirs(os.path.join(OUTPUT_PATH, f'labels/{data_type}/'), exist_ok=True)
+    os.makedirs(os.path.join(OUTPUT_PATH, f'{data_type}2017/'), exist_ok=True)
+    # os.makedirs(os.path.join(OUTPUT_PATH, f'labels/{data_type}/'), exist_ok=True)
     for im in tqdm(images, total=len(images)):
 
         img = imageio.imread(im['coco_url'])
@@ -39,46 +41,46 @@ def process_data(images, data_type="train"):
         anns = coco.loadAnns(annIds)
         
         image_name = im['file_name']
-        filename = image_name.replace("JPG", "txt")
+        # filename = image_name.replace("JPG", "txt")
         width = im['width']
         height = im['height']
         
-        #yolo data
+        # #yolo data
         
-        yolo_data = []
-        for i in range(len(anns)):
-            cat = anns[i]["category_id"] - 1
-            xmin = anns[i]["bbox"][0]
-            ymin = anns[i]["bbox"][1]
-            xmax = anns[i]["bbox"][2] + anns[i]["bbox"][0]
-            ymax = anns[i]["bbox"][3] + anns[i]["bbox"][1]
+        # yolo_data = []
+        # for i in range(len(anns)):
+        #     cat = anns[i]["category_id"] - 1
+        #     xmin = anns[i]["bbox"][0]
+        #     ymin = anns[i]["bbox"][1]
+        #     xmax = anns[i]["bbox"][2] + anns[i]["bbox"][0]
+        #     ymax = anns[i]["bbox"][3] + anns[i]["bbox"][1]
 
-            x = (xmin + xmax)/2
-            y = (ymin + ymax)/2
+        #     x = (xmin + xmax)/2
+        #     y = (ymin + ymax)/2
 
-            w = xmax - xmin
-            h = ymax - ymin
+        #     w = xmax - xmin
+        #     h = ymax - ymin
 
-            x /= width
-            w /= width
-            y /= height
-            h /= height
+        #     x /= width
+        #     w /= width
+        #     y /= height
+        #     h /= height
             
-            yolo_data.append([cat, x, y, w, h])
+        #     yolo_data.append([cat, x, y, w, h])
             
-        yolo_data = np.array(yolo_data)
+        # yolo_data = np.array(yolo_data)
         
-        os.makedirs(OUTPUT_PATH, exist_ok=True)
+        # os.makedirs(OUTPUT_PATH, exist_ok=True)
         
-        # save labels
-        np.savetxt(
-            os.path.join(OUTPUT_PATH, f"labels/{data_type}/{filename}"),
-            yolo_data,
-            fmt=["%d", "%f", "%f", "%f", "%f"]
-        )
+        # # save labels
+        # np.savetxt(
+        #     os.path.join(OUTPUT_PATH, f"labels/{data_type}/{filename}"),
+        #     yolo_data,
+        #     fmt=["%d", "%f", "%f", "%f", "%f"]
+        # )
         
         #save iamges
-        imageio.imwrite(os.path.join(OUTPUT_PATH, f'images/{data_type}/{image_name}'), img)
+        imageio.imwrite(os.path.join(OUTPUT_PATH, f'{data_type}2017/{image_name}'), img)
         
         
         # deeplab per bbox version
@@ -127,24 +129,18 @@ def process_data(images, data_type="train"):
         
         
 if __name__ == "__main__":
-    coco = COCO(JSON_PATH)
-    print(coco.info)
-    
-    # # get all category names
-    # cats = coco.loadCats(coco.getCatIds())
-    # cats = [cat['name'] for cat in cats]
-    
+    # make train data
+    coco_train = COCO(JSON_PATH_TRAIN)
+    print(coco_train.info)
     # get all ImgIds and images
-    imgIds = coco.getImgIds()
-    images = coco.loadImgs(imgIds)
-    
-    # train, validation split
-    train, valid = model_selection.train_test_split(
-        images,
-        test_size=0.1,
-        random_state=42,
-        shuffle=True        
-    )
-    
+    imgIds_train = coco_train.getImgIds()
+    train = coco_train.loadImgs(imgIds_train)
     process_data(train, data_type="train")
-    process_data(valid, data_type="validation")
+
+    # make validation data
+    coco_val = COCO(JSON_PATH_VAL)
+    print(coco_val.info)
+    # get all ImgIds and images
+    imgIds_val = coco_val.getImgIds()
+    valid = coco_val.loadImgs(imgIds_val)
+    process_data(valid, data_type="val")
