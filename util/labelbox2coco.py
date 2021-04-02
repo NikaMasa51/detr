@@ -7,15 +7,13 @@ from shapely.geometry import Polygon
 import requests
 from PIL import Image
 from tqdm import tqdm
-from sklearn import model_selection
 
 
-def from_json(label_data, im_output, type='train'):
-    # # read labelbox JSON output
-    # with open(labeled_data, 'r', encoding='utf-8') as f:
-    #     # lines = f.readlines()
-    #     label_data = json.load(f)
-    coco_output = f'./data/annotations/instances_{type}2017.json'
+def from_json(labeled_data, coco_output, im_output):
+    # read labelbox JSON output
+    with open(labeled_data, 'r', encoding='utf-8') as f:
+        # lines = f.readlines()
+        label_data = json.load(f)
 
     # setup COCO dataset container and info
     coco = {
@@ -64,7 +62,7 @@ def from_json(label_data, im_output, type='train'):
             "license": None,
             "flickr_url": data['Labeled Data'],
             "coco_url": data['Labeled Data'],
-            "date_captured": None,
+            "date_captured": None
         }
 
         coco['images'].append(image)
@@ -116,19 +114,6 @@ def from_json(label_data, im_output, type='train'):
 
 if __name__ == "__main__":
     json_file = './data/annotations/labelbox_final.json'
-    # read labelbox JSON output
-    with open(json_file, 'r', encoding='utf-8') as f:
-        # lines = f.readlines()
-        labeled_data = json.load(f)
-    
-    # train, validation split
-    train, valid = model_selection.train_test_split(
-        labeled_data,
-        test_size=0.1,
-        random_state=42,
-        shuffle=True        
-    )
-
     im_output = './data/train'
-    from_json(train, im_output, type='train')
-    from_json(valid, im_output, type='val')
+    coco_output = './data/annotations/coco_final.json'
+    from_json(json_file, coco_output, im_output)
