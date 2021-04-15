@@ -8,7 +8,8 @@ def add_detr_config(cfg):
     Add config for DETR.
     """
     cfg.MODEL.DETR = CN()
-    cfg.MODEL.DETR.NUM_CLASSES = 80
+#     cfg.MODEL.DETR.NUM_CLASSES = 80
+    cfg.MODEL.DETR.NUM_CLASSES = 2
 
     # For Segmentation
     cfg.MODEL.DETR.FROZEN_WEIGHTS = ''
